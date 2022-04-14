@@ -39,9 +39,10 @@ class _FormTrackingState extends State<FormTracking> {
     buttons.add(
       TextField(
         decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Enter a search term',
-        ),
+            border: OutlineInputBorder(),
+            hintText: 'Enter a search term',
+            labelText: 'textField1'),
+        key: Key("11"),
       ),
     );
     buttons.add(
@@ -50,6 +51,7 @@ class _FormTrackingState extends State<FormTracking> {
           border: UnderlineInputBorder(),
           labelText: 'Enter your username',
         ),
+        key: Key("22"),
       ),
     );
     buttons.add(ListTile(
@@ -57,6 +59,7 @@ class _FormTrackingState extends State<FormTracking> {
       trailing: CupertinoSwitch(
         activeColor: Theme.of(context).primaryColorDark,
         value: isSwitched,
+        key: Key("33"),
         onChanged: (bool value) {
           setState(() {
             isSwitched = value;
@@ -71,7 +74,15 @@ class _FormTrackingState extends State<FormTracking> {
     ));
 
     buttons.add(ElevatedButton(
-      onPressed: () async {},
+      onPressed: () async {
+        print('form parameters confirm button clicked');
+        FormParameters parameters = FormParameters('Form');
+        print('form paramters constructor called');
+        //parameters.fieldIds = [11, 22];
+        print('form parameter field ids added and method is called');
+        PluginMappintelligence.formTracking(parameters);
+        print('form tracking fired');
+      },
       child: Text('Confirm'),
       style:
           ElevatedButton.styleFrom(primary: Theme.of(context).primaryColorDark),

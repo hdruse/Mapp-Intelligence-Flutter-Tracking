@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 class PageParameters {
   String? searchTerm;
   Map<int, String>? params;
@@ -260,4 +263,95 @@ enum ExceptionType {
 class ErrorUserInfo {
   static String failureReason = "failureReason";
   static String description = "description";
+}
+
+class FormParameters {
+  FormParameters(this.formName);
+  String? formName;
+  List<int>? fieldIds;
+  List<int>? renameIds;
+  List<int>? changeFieldsValue;
+  List<int>? anonymousSpecificFields;
+  List<int>? fullContentSpecificFields;
+  bool? confirmButton;
+  bool? anonymous;
+  List<int>? pathAnalysis;
+  List<IOSFormField> iOSfileds = <IOSFormField>[];
+
+  Map<String, dynamic> toJson() => {
+        'form_name': formName,
+        'field_ids': fieldIds,
+        'rename_ids': renameIds,
+        'change_fields_value': changeFieldsValue,
+        'anonymous_specific_fields': anonymousSpecificFields,
+        'full_content_specific_fields': fullContentSpecificFields,
+        'confirm_button': confirmButton,
+        'anonymous': anonymous,
+        'path_analysis': pathAnalysis
+      };
+
+  void generateFields(List<Widget>? widgets) {
+    widgets?.forEach((element) {
+      print(element);
+      final tmpf = tryCast<TextFormField>(element);
+      if (tmpf != null) {
+        iOSfileds.add(IOSFormField(null, tmpf.controller?.text,
+            int.tryParse(tmpf.key.toString()), iOSFieldType.textField));
+      }
+      final tmpff = tryCast<TextField>(element);
+      if (tmpff != null) {
+        iOSfileds.add(IOSFormField(
+            tmpff.decoration?.labelText,
+            tmpff.controller?.text,
+            int.tryParse(tmpff.key.toString()),
+            iOSFieldType.textField));
+      }
+
+      final switchControl = tryCast<CupertinoSwitch>(element);
+      if (switchControl != null) {
+        iOSfileds.add(IOSFormField(
+            null,
+            "",
+            int.tryParse(switchControl.key.toString()),
+            iOSFieldType.switchControl));
+      }
+      final segmentedControl = tryCast<CupertinoSegmentedControl>(element);
+      if (segmentedControl != null) {
+        iOSfileds.add(IOSFormField(
+            null,
+            "",
+            int.tryParse(segmentedControl.key.toString()),
+            iOSFieldType.segmentedControl));
+      }
+      final picker = tryCast<CupertinoPicker>(element);
+      if (picker != null) {
+        iOSfileds.add(IOSFormField(null, "",
+            int.tryParse(picker.key.toString()), iOSFieldType.picker));
+      }
+    });
+  }
+}
+
+enum iOSFieldType {
+  textField,
+  textView,
+  switchControl,
+  picker,
+  segmentedControl
+}
+
+class IOSFormField {
+  IOSFormField(this.name, this.content, this.id, this.type);
+  String? name;
+  String? content;
+  int? id;
+  iOSFieldType? type;
+}
+
+T? tryCast<T>(dynamic value) {
+  try {
+    return (value as T);
+  } on TypeError catch (_) {
+    return null;
+  }
 }

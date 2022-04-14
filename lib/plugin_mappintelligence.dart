@@ -165,6 +165,12 @@ class PluginMappintelligence {
         <dynamic, dynamic>{'trackIds': trackIds, 'trackDomain': trackDomain});
   }
 
+  static Future<void> formTracking(FormParameters parameters) async {
+    print(parameters);
+    await _channel
+        .invokeMethod("formTracking", [jsonEncode(parameters.toJson())]);
+  }
+
   static Future<void> setAnonymousTracking(bool anonymousTracking,
       Set<String> params, bool generateNewEverId) async {
     var map = Map();

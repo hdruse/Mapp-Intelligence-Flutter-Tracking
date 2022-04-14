@@ -285,6 +285,19 @@ static NSNumber* logLevelGlobal = nil;
             NSLocalizedDescriptionKey:userInfoDict[@"description"] ? userInfoDict[@"description"] : @""
     }];
     [[MappIntelligence shared] trackExceptionWith:error];
+  } else if ([@"formTracking" isEqualToString: call.method]) {
+    NSString* jsonString = call.arguments[0];
+    NSData* parametersData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *formParamtersDictionary = [NSJSONSerialization JSONObjectWithData:parametersData options:0 error:NULL];
+    formParamtersDictionary = [self removeNullsFromDictionary:formParamtersDictionary];
+    NSLog(@"I am at form tracking at objective c level");
+    NSLog(@"form paramters dictionary%@", formParamtersDictionary);
+    MIFormParameters* parameters = [[MIFormParameters alloc] initWithDictionary: formParamtersDictionary];
+    NSLog(@"form parameters from object is: %@ and name: %@", parameters.fieldIds, parameters.formName);
+    UIViewController* base = [[[UIApplication sharedApplication] keyWindow] rootViewController];
+    UIViewController* topViewController = [self topViewController:base];
+    [[topViewController view] addSubview:[[UITextField alloc] initWithFrame:CGRectMake(0, 0, 1, 2)]];
+    [[MappIntelligence shared] formTracking:parameters];
   }
   else { 
     result(FlutterMethodNotImplemented);
