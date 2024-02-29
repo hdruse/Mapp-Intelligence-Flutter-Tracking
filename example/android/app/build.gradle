@@ -16,6 +16,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace 'com.example.plugin_mappintelligence'
     compileSdkVersion = 34
 
     sourceSets {
